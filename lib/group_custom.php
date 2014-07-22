@@ -75,7 +75,7 @@ class OC_Group_Custom extends OC_Group_Backend
     public function getGroups($search = '', $limit = null, $offset = null)
     {
         $stmt = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` LIKE ? AND `owner` = ?', $limit, $offset);
-        $result = $stmt->execute(array($search.'%',OCP\USER::getUser()));
+        $result = $stmt->execute(array('%'.$search.'%',OCP\USER::getUser()));
         $groups = array();
         while ($row = $result->fetchRow()) {
             $groups[] = $row['gid'];

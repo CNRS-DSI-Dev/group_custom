@@ -13,5 +13,6 @@
 "Delete Group" => "Enlever Groupe" ,
 "Make Group" => "Créer Groupe" ,
 "insert the new group" => "ajouter le nouveau groupe" ,
-"Choose another name" => "Choisissez un autre nom"
+"Choose another name" => "Choisissez un autre nom",
+"You" => "Vous",
 );

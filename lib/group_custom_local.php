@@ -47,7 +47,10 @@ class OC_Group_Custom_Local
         $stmt = OC_DB::prepare( "INSERT INTO `*PREFIX*groups_custom` ( `gid` , `owner` ) VALUES( ? , ? )" );
         $result = $stmt->execute( array( $gid , OCP\USER::getUser() ));
 
-        return $result ? true : false;
+        // adding onwer in group member
+        $return = self::addToGroup(OCP\USER::getUser(), $gid);
+
+        return ($result !== false and $return !== false) ? true : false;
 
     }
 
