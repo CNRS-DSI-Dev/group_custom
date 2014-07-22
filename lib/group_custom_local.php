@@ -34,7 +34,7 @@ class OC_Group_Custom_Local
      */
     public static function createGroup( $gid )
     {
-        
+
         // Check for existence
          $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?" );
         $result = $stmt->execute( array( $gid , OCP\USER::getUser() ));
@@ -67,6 +67,8 @@ class OC_Group_Custom_Local
         // Delete the group-user relation
         $stmt = OC_DB::prepare( "DELETE FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `owner` = ?" );
         $stmt->execute( array( $gid , OCP\USER::getUser() ));
+
+        \OCP\Util::emitHook('OC_User', 'post_deleteGroup', array('gid' => $gid));
 
         return true;
     }
