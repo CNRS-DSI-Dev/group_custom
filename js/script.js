@@ -18,7 +18,7 @@ OC.GroupCustom = {
 
             }else{
                 OC.dialogs.alert( jsondata.data.message , jsondata.data.title ) ;
-            }           
+            }
         });
 
     } ,
@@ -42,6 +42,8 @@ OC.GroupCustom = {
                 }, function(result) {
                     if(result.status == 'success' && result.data.length > 0) {
                         response(result.data);
+                        console.log(OC.GroupCustom.groupMember[OC.Share.SHARE_TYPE_USER]);
+                        console.log(OC.GroupCustom.groupMember[OC.Share.SHARE_TYPE_GROUP]);
                     }
                 });
             },
@@ -49,23 +51,23 @@ OC.GroupCustom = {
                 event.preventDefault();
             },
             select : function(event, selected) {
-                
+
                 var member = selected.item.value.shareWith;
                 $.post(OC.filePath('group_custom', 'ajax', 'addmember.php'), { member : member , group : OC.GroupCustom.groupSelected } , function ( jsondata ){
                     if(jsondata.status == 'success' ) {
                         $('#mkgroup').val('');
-                        OC.GroupCustom.groupMember[OC.Share.SHARE_TYPE_USER].push(member);
+                        OC.GroupCustom.groupMember[OC.Share.SHARE_TYPE_USER].push(member.uid);
                         $('#rightcontent').html(jsondata.data.page);
                         OC.GroupCustom.initDropDown() ;
                     }else{
                         OC.dialogs.alert( jsondata.data.message , jsondata.data.title ) ;
-                    }           
-                });                
+                    }
+                });
 
                 return false;
             },
         });
-    
+
     }
 };
 
@@ -87,9 +89,9 @@ $(document).ready(function() {
         });
     });
 
-    $('#add_group').live('click', function() {  
+    $('#add_group').live('click', function() {
         OC.GroupCustom.newGroup();
-    });     
+    });
 
     $('#import_group').click(function() {
         $('#import_group_file').trigger('click');
@@ -99,7 +101,7 @@ $(document).ready(function() {
         $('#import_group_form').submit();
     });
 
-    $('#leftcontent li').live('click', function() {  
+    $('#leftcontent li').live('click', function() {
 
             OC.GroupCustom.groupSelected = $(this).data('group') ;
 
@@ -108,18 +110,18 @@ $(document).ready(function() {
                     $('#rightcontent').html(jsondata.data.page)
                     OC.GroupCustom.initDropDown() ;
                     for (var i = 0 ; i <= jsondata.data.members.length - 1 ; i++ ) {
-                       OC.GroupCustom.groupMember[ OC.Share.SHARE_TYPE_USER ].push( jsondata.data.members[i] ) ;
+                       OC.GroupCustom.groupMember[ OC.Share.SHARE_TYPE_USER ].push( jsondata.data.members[i].uid ) ;
                     };
                 }
             }) ;
 
-    });    
+    });
 
-    $('.member-actions > .remove.member').live('click', function() {   
-        
+    $('.member-actions > .remove.member').live('click', function() {
+
         var container = $(this).parents('li').first();
         var member    = container.attr("data-member");
-        
+
         $.post(OC.filePath('group_custom', 'ajax', 'delmember.php'), { member : member , group : OC.GroupCustom.groupSelected } , function ( jsondata ){
             if(jsondata.status == 'success' ) {
                 container.remove();
@@ -127,15 +129,15 @@ $(document).ready(function() {
                 OC.GroupCustom.groupMember[OC.Share.SHARE_TYPE_USER].splice(index, 1);
             }else{
                 OC.dialogs.alert( jsondata.data.message , jsondata.data.title ) ;
-            }           
+            }
         });
 
         $('.tipsy').remove();
 
     });
 
-    $('.group-actions > .remove.group').live('click', function( event ) {   
-        
+    $('.group-actions > .remove.group').live('click', function( event ) {
+
         var container = $(this).parents('li').first();
 
         var group     = container.data('group');
@@ -147,15 +149,15 @@ $(document).ready(function() {
                 $('#rightcontent').html('');
             }else{
                 OC.dialogs.alert( jsondata.data.message , jsondata.data.title ) ;
-            }           
+            }
         });
 
         $('.tipsy').remove();
 
     });
 
-    $('.group-actions > .export.group').live('click', function( event ) {   
-  
+    $('.group-actions > .export.group').live('click', function( event ) {
+
         $('.tipsy').remove();
 
         var container = $(this).parents('li').first();

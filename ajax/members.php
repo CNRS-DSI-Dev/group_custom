@@ -27,28 +27,36 @@ OCP\JSON::callCheck();
 
 if (isset($_GET['search'])) {
 
+    $shareWithinGroupOnly = OC\Share\Share::shareWithGroupMembersOnly();
     $shareWith = array();
     $count = 0;
     $users = array();
     $limit = 0;
     $offset = 0;
-    while ($count < 4 && count($users) == $limit) {
-        $limit = 4 - $count;
-        $users = OC_User::getDisplayNames($_GET['search'], $limit, $offset);
+    while ($count < 15 && count($users) == $limit) {
+        $limit = 15 - $count;
+        if ($shareWithinGroupOnly) {
+            $usergroups = OC_Group::getUserGroups(OC_User::getUser());
+            $users = OC_Group::displayNamesInGroups($usergroups, $_GET['search'], $limit, $offset);
+        } else {
+            $users = OC_User::getDisplayNames($_GET['search'], $limit, $offset);
+        }
         $offset += $limit;
         foreach ($users as $uid => $displayName) {
-            if ((!isset($_GET['itemShares']) 
-              || !is_array($_GET['itemShares'][OCP\Share::SHARE_TYPE_USER]) 
-              || !in_array($user, $_GET['itemShares'][OCP\Share::SHARE_TYPE_USER])) 
+            if ((!isset($_GET['itemShares'])
+              || !is_array($_GET['itemShares'][OCP\Share::SHARE_TYPE_USER])
+              || !in_array($uid, $_GET['itemShares'][OCP\Share::SHARE_TYPE_USER]))
               && $uid != OC_User::getUser()) {
               $shareWith[] = array(
-                'label' => $displayName, 
-                'value' => array('shareType' => OCP\Share::SHARE_TYPE_USER, 
-                'shareWith' => $uid)
+                'label' => $displayName,
+                'value' => array(
+                    'shareType' => OCP\Share::SHARE_TYPE_USER,
+                    'shareWith' => $uid
+                ),
               );
               $count++;
             }
-        }    
+        }
     }
 
     OC_JSON::success(array('data' => $shareWith));
