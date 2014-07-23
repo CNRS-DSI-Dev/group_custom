@@ -1,10 +1,15 @@
+ul#leftcontent {
+	width: 18em;
+	padding-left: 5px;
+}
+
 #leftcontent li {
 	position: relative;
 	top: 2.9em;
 	white-space: normal ;
 }
 
-#leftcontent li img {	
+#leftcontent li img {
 	padding-right: 5px;
 	vertical-align: middle;
 }
@@ -18,7 +23,7 @@
 }
 
 #mkgroup {
-	width: 95% ;	
+	width: 95% ;
 }
 
 #rightcontent {
