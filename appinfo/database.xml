@@ -22,7 +22,7 @@
 				<length>64</length>
 			</field>
 			<index>
-				<name>*dbprefix*groups_custom_pkey</name>
+				<name>groups_custom_pkey</name>
 				<primary>true</primary>
 				<field>
 					<name>owner</name>
@@ -58,7 +58,7 @@
 				<length>64</length>
 			</field>
 			<index>
-				<name>*dbprefix*group_user_custom_pkey</name>
+				<name>group_user_custom_pkey</name>
 				<primary>true</primary>
 				<field>
 					<name>owner</name>
