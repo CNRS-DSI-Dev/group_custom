@@ -35,8 +35,8 @@ class OC_Group_Custom extends OC_Group_Backend
     public function inGroup( $uid, $gid )
     {
         // check
-        $stmt = OC_DB::prepare( "SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` = ? AND `owner` = ?" );
-        $result = $stmt->execute( array( $gid, $uid , OCP\USER::getUser() ));
+        $stmt = OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` LIKE ? AND `uid` = ?');
+        $result = $stmt->execute( array( $gid, $uid));
 
         return $result->fetchRow() ? true : false ;
     }
@@ -74,7 +74,7 @@ class OC_Group_Custom extends OC_Group_Backend
      */
     public function getGroups($search = '', $limit = null, $offset = null)
     {
-        $stmt = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` LIKE ? AND `owner` = ?', $limit, $offset);
+        $stmt = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `gid` LIKE ? AND `uid` = ?', $limit, $offset);
         $result = $stmt->execute(array('%'.$search.'%',OCP\USER::getUser()));
         $groups = array();
         while ($row = $result->fetchRow()) {
@@ -91,7 +91,7 @@ class OC_Group_Custom extends OC_Group_Backend
      */
     public function groupExists($gid)
     {
-        $query = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?' );
+        $query = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` = ?');
         $result = $query->execute(array($gid,OCP\USER::getUser()))->fetchOne();
         if ($result) {
             return true;
