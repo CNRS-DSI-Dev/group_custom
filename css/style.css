@@ -1,6 +1,7 @@
 ul#leftcontent {
 	width: 18em;
 	padding-left: 5px;
+	margin-top: 1em;
 }
 
 #leftcontent li {
