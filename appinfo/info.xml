@@ -3,8 +3,8 @@
 	<id>group_custom</id>
 	<name>Group Custom</name>
 	<description>Create and Manage Custom Groups</description>
-	<version>0.5</version>
-	<licence>AGPL (Icon taken from picol.org , Creative Commons-License BY-SA. )</licence>
-	<author>Jorge Rafael Garcia Ramos </author>
-	<require>4.93</require>
+	<version>0.6</version>
+	<licence>AGPLv3 (Icon taken from picol.org , Creative Commons-License BY-SA. )</licence>
+	<author>Jorge Rafael Garcia Ramos, Patrick Paysant / CNRS </author>
+	<require>7.x</require>
 </info>
