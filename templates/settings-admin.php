@@ -21,8 +21,7 @@
                 <input type="text" name="group_custom_name_prefix" id="groupCustomNamePrefix" placeholder="<?php p($l->t('Enter a prefix')); ?>" value="<?php p($_['groupCustomNamePrefix']); ?>" />
                 <span id="gc_prefix_msg" class="msg"></span>
                 <br />
-                <em><label for="groupCustomNamePrefix"><?php p($l->t("String that will be prefixed to
-                    all new created custom group. Use only alphanumeric and/or - _ : @ $ / characters."));?></label></em>
+                <em><label for="groupCustomNamePrefix"><?php p($l->t("String that will be prefixed to all new created custom group. Use only alphanumeric and/or - _ : @ $ / characters."));?></label></em>
             </form>
         </p>
     </div>
