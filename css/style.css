@@ -84,3 +84,8 @@ ul#leftcontent {
 
 #import_group_form { width: 0; height: 0; }
 #import_group_file { -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; filter:alpha(opacity=0); opacity:0; z-index:1001; width:0; height:0;}
+
+/* admin page */
+.indent {
+	padding-left: 28px;
+}

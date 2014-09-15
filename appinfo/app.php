@@ -10,6 +10,8 @@ OC_Group::useBackend( new OC_Group_Custom() );
 OCP\Util::addScript('group_custom','script');
 OCP\Util::addStyle ('group_custom','style');
 
+OCP\App::registerAdmin('group_custom', 'settings-admin');
+
 $l = OC_L10N::get('group_custom');
 
 OCP\App::addNavigationEntry(

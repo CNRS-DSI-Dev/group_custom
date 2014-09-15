@@ -34,6 +34,8 @@ class OC_Group_Custom_Local
      */
     public static function createGroup( $gid )
     {
+        // Need a prefix ?
+        $gid = OCA\Group_Custom\Helper::normalizeGroupName($gid);
 
         // Check for existence
          $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?" );

@@ -3,7 +3,7 @@
     <table width="100%">
         <tr>
             <td><?php echo $l->t("Group") ; ?></td>
-            <td><input type="text" id="new_group" style="width: 90%;" /></td>
+            <td><?php p($_['groupCustomNamePrefix']); ?><input type="text" id="new_group" style="width: 90%;" /></td>
         </tr>
         <tr>
             <td></td>
