@@ -1,8 +1,8 @@
 <?php
 
-OC::$CLASSPATH['OC_Group_Custom']='apps/group_custom/lib/group_custom.php';
-OC::$CLASSPATH['OC_Group_Custom_Local']='apps/group_custom/lib/group_custom_local.php';
-OC::$CLASSPATH['OC_Group_Custom_Hooks'] = 'apps/group_custom/lib/hooks.php';
+OC::$CLASSPATH['OC_Group_Custom']='group_custom/lib/group_custom.php';
+OC::$CLASSPATH['OC_Group_Custom_Local']='group_custom/lib/group_custom_local.php';
+OC::$CLASSPATH['OC_Group_Custom_Hooks'] = 'group_custom/lib/hooks.php';
 
 OCP\Util::connectHook('OC_User', 'post_deleteUser', 'OC_Group_Custom_Hooks', 'post_deleteUser');
 OC_Group::useBackend( new OC_Group_Custom() );
