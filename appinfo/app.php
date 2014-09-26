@@ -18,6 +18,6 @@ OCP\App::addNavigationEntry(
     array( 'id' => 'group_custom_index',
            'order' => 80,
            'href' => OCP\Util::linkTo( 'group_custom' , 'index.php' ),
-           'icon' => OCP\Util::imagePath( 'group_custom', 'group.png' ),
+           'icon' => OCP\Util::imagePath( 'group_custom', 'app.png' ),
            'name' => $l->t('My Groups') )
    );
