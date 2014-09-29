@@ -27,3 +27,9 @@ https://github.com/sergerehem/group_custom which is a fork of
 https://github.com/kadukeitor/group_custom
 
 Many thanks to all these smart people :)
+
+This fork is developed for an internal deployement of ownCloud at CNRS (French
+National Center for Scientific Research).
+
+If you want to be informed about this ownCloud project at CNRS, please contact
+david.rousse@dsi.cnrs.fr, gilian.gambini@dsi.cnrs.fr or marc.dexet@dsi.cnrs.fr
