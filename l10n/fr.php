@@ -1,8 +1,9 @@
 <?php $TRANSLATIONS = array(
 "Group" => "Groupe",
+"Personnal Groups" => "Groupes personnels",
 "Export" => "Exporter",
 "Remove" => "Enlever",
-"My Groups" => "Groupes",
+"My Groups" => "Mes Groupes",
 "Create Group" => "Créer Groupe",
 "Member to add" => "Membre à ajouter" ,
 "Members" => "Membres",
