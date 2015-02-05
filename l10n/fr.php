@@ -4,6 +4,7 @@
 "Export" => "Exporter",
 "Remove" => "Enlever",
 "My Groups" => "Mes Groupes",
+'"My Groups" are created locally and only consist of My CoRe accounts.' => '"Mes Groupes" sont créés localement et constitués uniquement d\'utilisateurs ayant un compte My Core.',
 "Create Group" => "Créer Groupe",
 "Member to add" => "Membre à ajouter" ,
 "Members" => "Membres",
