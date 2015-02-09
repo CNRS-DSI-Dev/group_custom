@@ -38,8 +38,10 @@ class OC_Group_Custom_Local
         $gid = OCA\Group_Custom\Helper::normalizeGroupName($gid);
 
         // Check for existence
-         $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?" );
-        $result = $stmt->execute( array( $gid , OCP\USER::getUser() ));
+         // $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?" );
+         $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ?" );
+        // $result = $stmt->execute( array( $gid , OCP\USER::getUser() ));
+        $result = $stmt->execute( array( $gid ));
         if ( $result->fetchRow() ) { return false; }
         $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups` WHERE `gid` = ?" );
         $result = $stmt->execute( array( $gid ));
@@ -184,8 +186,10 @@ class OC_Group_Custom_Local
      */
     public static function groupExists($gid)
     {
-        $query = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?' );
-        $result = $query->execute(array($gid,OCP\USER::getUser()))->fetchOne();
+        // $query = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?' );
+        $query = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ?' );
+        // $result = $query->execute(array($gid,OCP\USER::getUser()))->fetchOne();
+        $result = $query->execute(array($gid))->fetchOne();
         if ($result) {
             return true;
         }
