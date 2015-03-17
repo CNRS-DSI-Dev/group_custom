@@ -41,7 +41,7 @@ if ( isset($_POST['group']) ) {
 
     } else {
 
-        OCP\JSON::error(array('data' => array('title'=> $l->t('New Group') , 'message' => $l->t('Choose another name') ))) ;
+        OCP\JSON::error(array('data' => array('title'=> $l->t('New Group') , 'message' => $l->t('Please choose another name, this one is already in use in My CoRe.') ))) ;
 
     }
 
