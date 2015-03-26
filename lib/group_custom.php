@@ -110,8 +110,8 @@ class OC_Group_Custom extends OC_Group_Backend
      */
     public function usersInGroup($gid, $search = '', $limit = null, $offset = null)
     {
-        $stmt = OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` LIKE ? AND `owner` = ?', $limit, $offset);
-        $result = $stmt->execute(array($gid, $search.'%',OCP\USER::getUser()));
+        $stmt = OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` LIKE ?', $limit, $offset);
+        $result = $stmt->execute(array($gid, $search.'%'));
         $users = array();
         while ($row = $result->fetchRow()) {
             $users[] = $row['uid'];

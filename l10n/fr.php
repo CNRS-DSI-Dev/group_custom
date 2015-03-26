@@ -15,7 +15,7 @@
 "Delete Group" => "Enlever Groupe" ,
 "Make Group" => "Créer Groupe" ,
 "insert the new group" => "ajouter le nouveau groupe" ,
-"Choose another name" => "Merci de choisir un autre nom",
+"Please choose another name, this one is already in use in My CoRe." => "Veuillez choisir un autre nom SVP, celui-ci est déjà utilisé dans My CoRe.",
 "You" => "Vous",
 "Custom Group" => "Groupes personnalisés",
 "Allow all new created custom group name to be prefixed by the string below." => "Permet d'ajouter un préfixe aux nouveaux nom de groupes avec la chaîne ci-dessous.",
