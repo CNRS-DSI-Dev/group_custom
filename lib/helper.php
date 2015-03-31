@@ -55,6 +55,10 @@ class Helper {
      */
     public static function normalizeGroupName($gid) {
         $prefix = self::getGroupCustomNamePrefix();
+        // if group name is already prefixed, don't add prefix again
+        if (strpos($gid, $prefix) === 0) {
+            return $gid;
+        }
 
         return $prefix . $gid;
     }
