@@ -59,6 +59,58 @@ class OC_Group_Custom_Local
     }
 
     /**
+     * @brief Try to rename a new group
+     * @param  string $oldgid The old name of the group to rename
+     * @param  string $gid The target name of the group
+     * @return bool
+     *
+     * Tries to rename a new group. If the group name already exists, false will
+     * be returned.
+     */
+    public static function renameGroup($oldGid, $gid)
+    {
+        // démarrer une transaction
+        OC_DB::beginTransaction();
+
+        try {
+            // renommer dans oc_groups_custom
+            $sql = "UPDATE *PREFIX*groups_custom SET gid = :newName WHERE gid = :oldName";
+            $st = OC_DB::prepare($sql);
+            $st->execute(array(
+                ':newName' => $gid,
+                ':oldName' => $oldGid,
+            ));
+
+            // oc_group_user_custom
+            $sql = "UPDATE *PREFIX*group_user_custom SET gid = :newName WHERE gid = :oldName";
+            $st = OC_DB::prepare($sql);
+            $st->execute(array(
+                ':newName' => $gid,
+                ':oldName' => $oldGid,
+            ));
+
+            // renommer dans oc_share
+            $sql = "UPDATE *PREFIX*share SET share_with = :newName WHERE share_with = :oldName and share_type = :type";
+            $st = OC_DB::prepare($sql);
+            $st->execute(array(
+                ':newName' => $gid,
+                ':oldName' => $oldGid,
+                ':type' => OCP\Share::SHARE_TYPE_GROUP,
+            ));
+
+            // finir la transaction (commit)
+            OC_DB::commit();
+        }
+        catch(Exception $e) {
+            // OC_DB::rollback(); // NON EXISTENT FUNCTION IN OC stable7, comes with OC 8.1.0beta2 !!
+            \OC::$server->getDatabaseConnection()->rollback();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @brief delete a group
      * @param  string $gid gid of the group to delete
      * @return bool
