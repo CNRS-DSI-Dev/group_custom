@@ -6,6 +6,7 @@
             echo "<li data-group=\"$group\" ><img src=" . OCP\Util::imagePath( 'group_custom', 'group.png' ) . ">$group
                 <span class=\"group-actions\">
                     <a href=\"#\" class=\"action export group\" original-title=\"" . $l->t('Export') . "\"><img src=\"" . OCP\Util::imagePath( 'core', 'actions/download.png' ) . "\"></a>
+                    <a href=\"#\" class=\"action edit group\" original-title=\"" . $l->t('Edit') . "\"><img src=\"" . OCP\Util::imagePath( 'core', 'actions/history.png' ) . "\"></a>
                     <a href=\"#\" class=\"action remove group\" original-title=\"" . $l->t('Remove') . "\"><img src=\"" . OCP\Util::imagePath( 'core', 'actions/delete.png' ) . "\"></a>
                 </span></li>" ;
         }

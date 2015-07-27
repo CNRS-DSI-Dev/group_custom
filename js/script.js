@@ -23,8 +23,38 @@ OC.GroupCustom = {
 
     } ,
 
+    editGroup : function() {
+        var groupname = $('#new_group_name').val().trim();
+
+        $('#edit_group_dialog').dialog('destroy').remove();
+
+        OC.GroupCustom.groupSelected = groupname ;
+
+        $.post(OC.filePath('group_custom', 'ajax', 'editgroup.php'), { groupname : groupname } , function ( jsondata ){
+            if(jsondata.status == 'success' ) {
+                $('#leftcontent').html(jsondata.data.page)
+            }else{
+                OC.dialogs.alert( jsondata.data.message , jsondata.data.title ) ;
+            }
+        });
+    },
+
     doExport:function( group ) {
             document.location.href = OC.linkTo('group_custom', 'ajax/export.php') + '?group=' + group;
+    },
+
+    doEdit:function( group ) {
+        $('#group_custom_holder').load(OC.filePath('group_custom', 'ajax', 'dialog.php') + '?action=edit&groupname=' + group, function(response) {
+            if(response.status != 'error') {
+                $('#edit_group_dialog').dialog({
+                    minWidth : 400,
+                    modal : true,
+                    close : function(event, ui) {
+                        $(this).dialog('destroy').remove();
+                    }
+                }).css('overflow', 'visible');
+            }
+        });
     },
 
     initDropDown : function() {
@@ -91,6 +121,10 @@ $(document).ready(function() {
 
     $('#add_group').live('click', function() {
         OC.GroupCustom.newGroup();
+    });
+
+    $('#edit_group').live('click', function() {
+        OC.GroupCustom.editGroup();
     });
 
     $('#import_group').click(function() {
@@ -164,6 +198,18 @@ $(document).ready(function() {
         var group     = container.data('group');
 
         OC.GroupCustom.doExport( group ) ;
+        return false;
+
+    });
+
+    $('.group-actions > .edit.group').live('click', function( event ) {
+
+        $('.tipsy').remove();
+
+        var container = $(this).parents('li').first();
+        var group     = container.data('group');
+
+        OC.GroupCustom.doEdit( group ) ;
         return false;
 
     });

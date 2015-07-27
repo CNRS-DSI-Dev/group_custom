@@ -24,6 +24,28 @@
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('group_custom');
 
-$output = new OCP\Template("group_custom", "part.dialog");
-$output->assign('groupCustomNamePrefix', OCA\Group_Custom\Helper::getGroupCustomNamePrefix());
-$output -> printpage();
+if (!empty($_GET['action']) and 'edit' == $_GET['action']) {
+    $output = new OCP\Template("group_custom", "part.edit_dialog");
+
+    if (!empty($_GET['groupname'])) {
+        self::$session->set('gc_oldname', $_GET['groupname']);
+
+        $output->assign('groupCustomNamePrefix', OCA\Group_Custom\Helper::getGroupCustomNamePrefix());
+        $output->assign('oldGroupName', $_GET['groupname']);
+        $output -> printpage();
+    }
+    else {
+        OCP\JSON::error(array(
+            'data' => array(
+                'title'=> $l->t('Edit Group') ,
+                'message' => $l->t('Error.'),      // FIXME: error msg
+            ),
+        )) ;
+    }
+}
+else {
+    $output = new OCP\Template("group_custom", "part.dialog");
+    $output->assign('groupCustomNamePrefix', OCA\Group_Custom\Helper::getGroupCustomNamePrefix());
+    $output -> printpage();
+}
+
