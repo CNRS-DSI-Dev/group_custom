@@ -22,4 +22,9 @@
 "WARNING: <strong>changing</strong> prefix if you have previously set one will only apply on <strong>future</strong> group name." => "ATTENTION: <strong>changer</strong> le préfixe précédemment défini ne s'appliquera qu'aux <strong>futurs</strong> noms de groupes.",
 "Enter a prefix" => "Saisissez un préfixe",
 "String that will be prefixed to all new created custom group. Use only alphanumeric and/or - _ : @ $ / characters." => "Chaîne qui sera préfixée à tous les noms de groupes personnalisés. N'utilisez que les caractères alphanumériques et/ou - _ : @ $ /",
+"Edit the group name" => "Modification du nom du groupe",
+"From" => "Nom actuel",
+"To" => "Nouveau nom",
+"Rename Group" => "Renommer le groupe",
+"Edit" => "Editer",
 );
