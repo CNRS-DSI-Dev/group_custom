@@ -31,7 +31,7 @@ if (!empty($_GET['action']) and 'edit' == $_GET['action']) {
         self::$session->set('gc_oldname', $_GET['groupname']);
 
         $output->assign('groupCustomNamePrefix', OCA\Group_Custom\Helper::getGroupCustomNamePrefix());
-        $output->assign('oldGroupName', $_GET['groupname']);
+        $output->assign('oldGroupName', htmlentities($_GET['groupname'], ENT_QUOTES, "UTF-8"));
         $output -> printpage();
     }
     else {
