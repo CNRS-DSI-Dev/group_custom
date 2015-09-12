@@ -2,7 +2,7 @@
     <table width="100%">
         <tr>
             <td><?php echo $l->t("From") ; ?></td>
-            <td><?php p($_['oldGroupName']); ?></td>
+            <td><?php print_unescaped($_['oldGroupName']); ?></td>
         </tr>
         <tr>
             <td><?php echo $l->t("To") ; ?></td>

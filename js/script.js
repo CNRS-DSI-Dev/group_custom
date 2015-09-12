@@ -44,7 +44,7 @@ OC.GroupCustom = {
     },
 
     doEdit:function( group ) {
-        $('#group_custom_holder').load(OC.filePath('group_custom', 'ajax', 'dialog.php') + '?action=edit&groupname=' + group, function(response) {
+        $('#group_custom_holder').load(OC.filePath('group_custom', 'ajax', 'dialog.php') + '?action=edit&groupname=' + encodeURIComponent(group), function(response) {
             if(response.status != 'error') {
                 $('#edit_group_dialog').dialog({
                     minWidth : 400,
