@@ -2,7 +2,7 @@
 
 ownCloud application: create and manage Custom Groups.
 
-App has been forked / patched for CNRS (French National Center for Scientific Research) use in ownCloud 7.
+App has been forked / patched for CNRS (French National Center for Scientific Research) use in ownCloud 9.
 
 ## Added features/changes
 
@@ -11,14 +11,18 @@ App has been forked / patched for CNRS (French National Center for Scientific Re
 * shares are suppressed if owner of custom group is deleted
 * allow admin to set a prefix that will be added to all future custom group names
 
-Tested only in OwnCloud 7
+Tested in OwnCloud 9.2
+
+## Pre-requisites
+
+You need clean url activated on your ownCloud instance to get proper behaviour from custom group. If not, all features will be present and functional but some display errors will happen.
 
 ## License and Author
 
 |                      |                                          |
 |:---------------------|:-----------------------------------------|
 | **Author:**          | Patrick Paysant (<ppaysant@linagora.com>)
-| **Copyright:**       | Copyright (c) 2014 CNRS DSI
+| **Copyright:**       | Copyright (c) 2016 CNRS DSI
 | **License:**         | AGPL v3, see the COPYING file.
 
 This app is a fork from

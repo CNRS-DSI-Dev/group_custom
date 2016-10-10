@@ -1,8 +1,14 @@
 <?php
 
-namespace OCA\Group_Custom;
+namespace OCA\Group_Custom\Lib;
 
 class Helper {
+    public static function registerHooks() {
+        // \OCP\Util::connectHook('OC_User', 'post_deleteUser', '\OCA\Group_Custom\Lib\Hooks', 'post_deleteUser');
+        $userManager = \OC::$server->getUserManager();
+        $userManager->listen('\OC\User', 'postDelete', array('\OCA\Group_Custom\Lib\Hooks', 'post_deleteUser'));
+    }
+
     /**
      * Verify if prefix is enabled (see general settings screen, "Custom Groups" section)
      * @return boolean

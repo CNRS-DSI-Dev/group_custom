@@ -3,8 +3,12 @@
 	<id>group_custom</id>
 	<name>Group Custom</name>
 	<description>Create and Manage Custom Groups</description>
-	<version>0.6</version>
+	<version>2.0</version>
 	<licence>AGPLv3 (Icon taken from picol.org , Creative Commons-License BY-SA. )</licence>
 	<author>Jorge Rafael Garcia Ramos, Patrick Paysant / CNRS </author>
-	<require>7.x</require>
+    <dependencies>
+        <owncloud min-version="9.0" max-version="10.0"/>
+    </dependencies>
+    <repository type="git">https://github.com/CNRS-DSI-Dev/group_custom</repository>
+    <bugs>https://github.com/CNRS-DSI-Dev/group_custom/issues</bugs>
 </info>

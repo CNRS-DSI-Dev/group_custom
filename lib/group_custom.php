@@ -21,8 +21,22 @@
  *
  */
 
-class OC_Group_Custom extends OC_Group_Backend
+namespace OCA\Group_Custom\Lib;
+
+class Group_Custom implements \OCP\GroupInterface
 {
+
+    /**
+    * Check if backend implements actions
+    * @param int $actions bitwise-or'ed actions
+    * @return boolean
+    *
+    * Returns the supported actions as int to be
+    * compared with OC_USER_BACKEND_CREATE_USER etc.
+    */
+    public function implementsActions($actions) {
+        return (bool)(\OC\Group\Backend::COUNT_USERS & $actions);
+    }
 
     /**
      * @brief is user in group?
@@ -35,7 +49,7 @@ class OC_Group_Custom extends OC_Group_Backend
     public function inGroup( $uid, $gid )
     {
         // check
-        $stmt = OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` LIKE ? AND `uid` = ?');
+        $stmt = \OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` LIKE ? AND `uid` = ?');
         $result = $stmt->execute( array( $gid, $uid));
 
         return $result->fetchRow() ? true : false ;
@@ -52,7 +66,7 @@ class OC_Group_Custom extends OC_Group_Backend
     public function getUserGroups( $uid )
     {
         // No magic!
-        $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `uid` = ?" );
+        $stmt = \OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `uid` = ?" );
         $result = $stmt->execute( array( $uid ));
 
         $groups = array();
@@ -74,8 +88,8 @@ class OC_Group_Custom extends OC_Group_Backend
      */
     public function getGroups($search = '', $limit = null, $offset = null)
     {
-        $stmt = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `gid` LIKE ? AND `uid` = ?', $limit, $offset);
-        $result = $stmt->execute(array('%'.$search.'%',OCP\USER::getUser()));
+        $stmt = \OC_DB::prepare('SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `gid` LIKE ? AND `uid` = ?', $limit, $offset);
+        $result = $stmt->execute(array('%'.$search.'%',\OCP\User::getUser()));
         $groups = array();
         while ($row = $result->fetchRow()) {
             $groups[] = $row['gid'];
@@ -91,8 +105,8 @@ class OC_Group_Custom extends OC_Group_Backend
      */
     public function groupExists($gid)
     {
-        $query = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` = ?');
-        $result = $query->execute(array($gid,OCP\USER::getUser()))->fetchOne();
+        $query = \OC_DB::prepare('SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ?');
+        $result = $query->execute(array($gid))->fetchOne();
         if ($result) {
             return true;
         }
@@ -110,7 +124,7 @@ class OC_Group_Custom extends OC_Group_Backend
      */
     public function usersInGroup($gid, $search = '', $limit = null, $offset = null)
     {
-        $stmt = OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` LIKE ?', $limit, $offset);
+        $stmt = \OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` LIKE ?', $limit, $offset);
         $result = $stmt->execute(array($gid, $search.'%'));
         $users = array();
         while ($row = $result->fetchRow()) {
@@ -118,6 +132,30 @@ class OC_Group_Custom extends OC_Group_Backend
         }
 
         return $users;
+    }
+
+    /**
+     * get the number of all users matching the search string in a group
+     * @param string $gid
+     * @param string $search
+     * @return int|false
+     * @throws \OC\DatabaseException
+     */
+    public function countUsersInGroup($gid, $search = '') {
+        $parameters = [$gid];
+        $searchLike = '';
+        if ($search !== '') {
+            $parameters[] = '%' . $this->dbConn->escapeLikeParameter($search) . '%';
+            $searchLike = ' AND `uid` LIKE ?';
+        }
+
+        $stmt = \OC_DB::prepare('SELECT COUNT(`uid`) AS `count` FROM `*PREFIX*group_user_custom` WHERE `gid` = ?' . $searchLike);
+        $result = $stmt->execute($parameters);
+        $count = $result->fetchOne();
+        if($count !== false) {
+            $count = intval($count);
+        }
+        return $count;
     }
 
 }

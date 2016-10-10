@@ -21,8 +21,18 @@
  *
  */
 
-class OC_Group_Custom_Local
+namespace OCA\Group_Custom\Lib;
+
+use OCP\IDBConnection;
+
+class Group_Custom_Local
 {
+
+    protected $db;
+
+    public function __construct(IDBConnection $db) {
+        $this->db = $db;
+    }
 
     /**
      * @brief Try to create a new group
@@ -35,24 +45,24 @@ class OC_Group_Custom_Local
     public static function createGroup( $gid )
     {
         // Need a prefix ?
-        $gid = OCA\Group_Custom\Helper::normalizeGroupName($gid);
+        $gid = \OCA\Group_Custom\Lib\Helper::normalizeGroupName($gid);
 
         // Check for existence
          // $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?" );
-         $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ?" );
+         $stmt = \OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ?" );
         // $result = $stmt->execute( array( $gid , OCP\USER::getUser() ));
         $result = $stmt->execute( array( $gid ));
         if ( $result->fetchRow() ) { return false; }
-        $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups` WHERE `gid` = ?" );
+        $stmt = \OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups` WHERE `gid` = ?" );
         $result = $stmt->execute( array( $gid ));
         if ( $result->fetchRow() ) { return false; }
 
         // Add group and exit
-        $stmt = OC_DB::prepare( "INSERT INTO `*PREFIX*groups_custom` ( `gid` , `owner` ) VALUES( ? , ? )" );
-        $result = $stmt->execute( array( $gid , OCP\USER::getUser() ));
+        $stmt = \OC_DB::prepare( "INSERT INTO `*PREFIX*groups_custom` ( `gid` , `owner` ) VALUES( ? , ? )" );
+        $result = $stmt->execute( array( $gid , \OCP\USER::getUser() ));
 
         // adding onwer in group member
-        $return = self::addToGroup(OCP\USER::getUser(), $gid);
+        $return = self::addToGroup(\OCP\USER::getUser(), $gid);
 
         return ($result !== false and $return !== false) ? true : false;
 
@@ -70,12 +80,12 @@ class OC_Group_Custom_Local
     public static function renameGroup($oldGid, $gid)
     {
         // démarrer une transaction
-        OC_DB::beginTransaction();
+        \OC::$server->getDatabaseConnection()->beginTransaction();
 
         try {
             // renommer dans oc_groups_custom
             $sql = "UPDATE *PREFIX*groups_custom SET gid = :newName WHERE gid = :oldName";
-            $st = OC_DB::prepare($sql);
+            $st = \OC_DB::prepare($sql);
             $st->execute(array(
                 ':newName' => $gid,
                 ':oldName' => $oldGid,
@@ -83,7 +93,7 @@ class OC_Group_Custom_Local
 
             // oc_group_user_custom
             $sql = "UPDATE *PREFIX*group_user_custom SET gid = :newName WHERE gid = :oldName";
-            $st = OC_DB::prepare($sql);
+            $st = \OC_DB::prepare($sql);
             $st->execute(array(
                 ':newName' => $gid,
                 ':oldName' => $oldGid,
@@ -91,18 +101,17 @@ class OC_Group_Custom_Local
 
             // renommer dans oc_share
             $sql = "UPDATE *PREFIX*share SET share_with = :newName WHERE share_with = :oldName and share_type = :type";
-            $st = OC_DB::prepare($sql);
+            $st = \OC_DB::prepare($sql);
             $st->execute(array(
                 ':newName' => $gid,
                 ':oldName' => $oldGid,
-                ':type' => OCP\Share::SHARE_TYPE_GROUP,
+                ':type' => \OCP\Share::SHARE_TYPE_GROUP,
             ));
 
             // finir la transaction (commit)
-            OC_DB::commit();
+            \OC::$server->getDatabaseConnection()->commit();
         }
-        catch(Exception $e) {
-            // OC_DB::rollback(); // NON EXISTENT FUNCTION IN OC stable7, comes with OC 8.1.0beta2 !!
+        catch(\Exception $e) {
             \OC::$server->getDatabaseConnection()->rollback();
             return false;
         }
@@ -120,12 +129,12 @@ class OC_Group_Custom_Local
     public static function deleteGroup( $gid )
     {
         // Delete the group
-        $stmt = OC_DB::prepare( "DELETE FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?" );
-        $stmt->execute( array( $gid , OCP\USER::getUser() ));
+        $stmt = \OC_DB::prepare( "DELETE FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?" );
+        $stmt->execute( array( $gid , \OCP\USER::getUser() ));
 
         // Delete the group-user relation
-        $stmt = OC_DB::prepare( "DELETE FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `owner` = ?" );
-        $stmt->execute( array( $gid , OCP\USER::getUser() ));
+        $stmt = \OC_DB::prepare( "DELETE FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `owner` = ?" );
+        $stmt->execute( array( $gid , \OCP\USER::getUser() ));
 
         \OCP\Util::emitHook('OC_User', 'post_deleteGroup', array('gid' => $gid));
 
@@ -143,8 +152,8 @@ class OC_Group_Custom_Local
     public static function inGroup( $uid, $gid )
     {
         // check
-        $stmt = OC_DB::prepare( "SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` = ? AND `owner` = ?" );
-        $result = $stmt->execute( array( $gid, $uid , OCP\USER::getUser() ));
+        $stmt = \OC_DB::prepare( "SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` = ? AND `owner` = ?" );
+        $result = $stmt->execute( array( $gid, $uid , \OCP\USER::getUser() ));
 
         return $result->fetchRow() ? true : false ;
     }
@@ -160,9 +169,9 @@ class OC_Group_Custom_Local
     public static function addToGroup( $uid, $gid )
     {
         // No duplicate entries!
-        if ( ! OC_Group_Custom_Local::inGroup( $uid, $gid ) ) {
-            $stmt = OC_DB::prepare( "INSERT INTO `*PREFIX*group_user_custom` ( `gid`, `uid`, `owner` ) VALUES( ?, ?, ? )" );
-            $stmt->execute( array( $gid, $uid, OCP\USER::getUser() ));
+        if ( ! Group_Custom_Local::inGroup( $uid, $gid ) ) {
+            $stmt = \OC_DB::prepare( "INSERT INTO `*PREFIX*group_user_custom` ( `gid`, `uid`, `owner` ) VALUES( ?, ?, ? )" );
+            $stmt->execute( array( $gid, $uid, \OCP\USER::getUser() ));
 
             return true;
         } else {
@@ -180,8 +189,8 @@ class OC_Group_Custom_Local
      */
     public static function removeFromGroup( $uid, $gid )
     {
-        $stmt = OC_DB::prepare( "DELETE FROM `*PREFIX*group_user_custom` WHERE `uid` = ? AND `gid` = ? AND `owner` = ?" );
-        $stmt->execute( array( $uid, $gid , OCP\USER::getUser() ));
+        $stmt = \OC_DB::prepare( "DELETE FROM `*PREFIX*group_user_custom` WHERE `uid` = ? AND `gid` = ? AND `owner` = ?" );
+        $stmt->execute( array( $uid, $gid , \OCP\USER::getUser() ));
 
         return true;
     }
@@ -199,7 +208,7 @@ class OC_Group_Custom_Local
         // No magic!
         // $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `uid` = ? AND `owner` = ?" );
         // $result = $stmt->execute( array( $uid , OCP\USER::getUser() ));
-        $stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `uid` = ?" );
+        $stmt = \OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*group_user_custom` WHERE `uid` = ?" );
         $result = $stmt->execute( array( $uid ));
 
         $groups = array();
@@ -221,8 +230,8 @@ class OC_Group_Custom_Local
      */
     public static function getGroups($search = '', $limit = null, $offset = null)
     {
-        $stmt = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` LIKE ? AND `owner` = ?', $limit, $offset);
-        $result = $stmt->execute(array($search.'%',OCP\USER::getUser()));
+        $stmt = \OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` LIKE ? AND `owner` = ?', $limit, $offset);
+        $result = $stmt->execute(array($search.'%',\OCP\USER::getUser()));
         $groups = array();
         while ($row = $result->fetchRow()) {
             $groups[] = $row['gid'];
@@ -239,7 +248,7 @@ class OC_Group_Custom_Local
     public static function groupExists($gid)
     {
         // $query = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ? AND `owner` = ?' );
-        $query = OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ?' );
+        $query = \OC_DB::prepare('SELECT `gid` FROM `*PREFIX*groups_custom` WHERE `gid` = ?' );
         // $result = $query->execute(array($gid,OCP\USER::getUser()))->fetchOne();
         $result = $query->execute(array($gid))->fetchOne();
         if ($result) {
@@ -259,13 +268,13 @@ class OC_Group_Custom_Local
      */
     public static function usersInGroup($gid, $search = '', $limit = null, $offset = null)
     {
-        $stmt = OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` LIKE ? AND `owner` = ?', $limit, $offset);
-        $result = $stmt->execute(array($gid, $search.'%',OCP\USER::getUser()));
+        $stmt = \OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` LIKE ? AND `owner` = ?', $limit, $offset);
+        $result = $stmt->execute(array($gid, $search.'%',\OCP\USER::getUser()));
         // $stmt = OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` LIKE ?', $limit, $offset);
         // $result = $stmt->execute(array($gid, $search.'%'));
         $users = array();
         while ($row = $result->fetchRow()) {
-            $users[] = OC_User::getDisplayName( $row['uid'] );
+            $users[] = \OC_User::getDisplayName( $row['uid'] );
         }
 
         return $users;
@@ -281,11 +290,11 @@ class OC_Group_Custom_Local
      */
     public static function usersMapInGroup($gid, $search = '', $limit = null, $offset = null)
     {
-        $stmt = OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` LIKE ? AND `owner` = ?', $limit, $offset);
-        $result = $stmt->execute(array($gid, $search.'%',OCP\USER::getUser()));
+        $stmt = \OC_DB::prepare('SELECT `uid` FROM `*PREFIX*group_user_custom` WHERE `gid` = ? AND `uid` LIKE ? AND `owner` = ?', $limit, $offset);
+        $result = $stmt->execute(array($gid, $search.'%',\OCP\USER::getUser()));
         $users = array();
         while ($row = $result->fetchRow()) {
-            $users[] = array( "uid" => $row['uid'], "displayName" => OC_User::getDisplayName( $row['uid'] ) );
+            $users[] = array( "uid" => $row['uid'], "displayName" => \OC_User::getDisplayName( $row['uid'] ) );
         }
 
         return $users;

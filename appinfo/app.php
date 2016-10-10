@@ -1,23 +1,24 @@
 <?php
 
-OC::$CLASSPATH['OC_Group_Custom']='group_custom/lib/group_custom.php';
-OC::$CLASSPATH['OC_Group_Custom_Local']='group_custom/lib/group_custom_local.php';
-OC::$CLASSPATH['OC_Group_Custom_Hooks'] = 'group_custom/lib/hooks.php';
+use \OCA\Group_Custom\Lib\Group_Custom;
 
-OCP\Util::connectHook('OC_User', 'post_deleteUser', 'OC_Group_Custom_Hooks', 'post_deleteUser');
-OC_Group::useBackend( new OC_Group_Custom() );
+if (\OCP\App::isEnabled('group_custom')) {
+    \OCA\Group_Custom\Lib\Helper::registerHooks();
 
-OCP\Util::addScript('group_custom','script');
-OCP\Util::addStyle ('group_custom','style');
+    \OC_Group::useBackend( new Group_Custom() );
 
-OCP\App::registerAdmin('group_custom', 'settings-admin');
+    \OCP\Util::addScript('group_custom','script');
+    \OCP\Util::addStyle ('group_custom','style');
 
-$l = OC_L10N::get('group_custom');
+    \OCP\App::registerAdmin('group_custom', 'settings-admin');
 
-OCP\App::addNavigationEntry(
-    array( 'id' => 'group_custom_index',
-           'order' => 80,
-           'href' => OCP\Util::linkTo( 'group_custom' , 'index.php' ),
-           'icon' => OCP\Util::imagePath( 'group_custom', 'app.png' ),
-           'name' => $l->t('My Groups') )
-   );
+    $urlGenerator = \OC::$server->getURLGenerator();
+    \OCP\App::addNavigationEntry(
+        array( 'id' => 'group_custom_index',
+               'order' => 80,
+               // 'href' => OCP\Util::linkTo( 'group_custom' , 'index.php' ),
+               'href' => $urlGenerator->linkToRoute('group_custom.groups.index'),
+               'icon' => $urlGenerator->imagePath('group_custom', 'app.png'),
+               'name' => \OC::$server->getL10N('group_custom')->t('My Groups') )
+       );
+}

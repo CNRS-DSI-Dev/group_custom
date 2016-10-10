@@ -3,7 +3,7 @@
 	<button class="button" id="create_group"><?php echo $l->t('Create Group');?></button>
     <button class="button" id="import_group"><?php echo $l->t('Import Group');?></button>
     <div id="description"><?php p($l->t('"My Groups" are created locally and only consist of My CoRe accounts.')); ?></div>
-    <form  id="import_group_form" class="file_upload_form" action="<?php echo OCP\Util::linkTo('group_custom', 'ajax/import.php'); ?>" method="post" enctype="multipart/form-data">
+    <form  id="import_group_form" class="file_upload_form" action="<?php echo \OC::$server->getURLGenerator()->linkToRoute('group_custom.customgroups.groupImport'); ?>" method="post" enctype="multipart/form-data">
         <input class="float" id="import_group_file" type="file" name="import_group_file" />
 	</form>
 
@@ -12,7 +12,7 @@
 <ul id="leftcontent">
 
     <?php
-        echo $this->inc('part.group');
+        print_unescaped($this->inc('part.group'));
     ?>
 
 </ul>
