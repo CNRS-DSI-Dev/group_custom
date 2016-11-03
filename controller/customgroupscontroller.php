@@ -294,7 +294,7 @@ class CustomgroupsController extends Controller
             }
         }
 
-        return new RedirectResponse(\OCP\Util::linkToAbsolute($this->appName)) ;
+        return new RedirectResponse(\OCP\Util::linkToAbsolute($this->appName, '')) ;
     }
 
     /**
