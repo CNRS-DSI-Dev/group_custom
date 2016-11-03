@@ -13,6 +13,7 @@ namespace OCA\Group_Custom\Controller;
 use \OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use \OCP\IRequest;
 use \OCP\IConfig;
@@ -250,10 +251,14 @@ class CustomgroupsController extends Controller
             header('Content-Type: application/octet-stream');
             header('Content-Disposition: inline; filename=' . str_replace(' ', '_', $group) . '.ocg');
 
-            $members = Group_Custom_Local::usersInGroup( $group ) ;
-            $data    = array_merge( array($group) , $members ) ;
+            $members = Group_Custom_Local::usersInGroup( $group );
+            $data    = array_merge( array($group) , $members );
 
-            echo serialize($data) ;
+            return new DataDownloadResponse(
+                serialize($data),
+                str_replace(' ', '_', $group) . '.ocg',
+                'application/octet-stream'
+            );
         }
     }
 
