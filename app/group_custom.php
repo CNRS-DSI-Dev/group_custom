@@ -10,9 +10,9 @@
 
 namespace OCA\Group_Custom\App;
 
-use \OCP\AppFramework\App;
+use OCP\App;
 
-class Group_Custom extends App
+class Group_Custom extends \OCP\AppFramework\App
 {
     /**
      * Define your dependencies in here
@@ -23,4 +23,7 @@ class Group_Custom extends App
         $container = $this->getContainer();
     }
 
+    public function registerSettings() {
+        App::registerAdmin('group_custom', 'settings/settings-admin');
+    }
 }

@@ -45,10 +45,20 @@ class SettingsController extends ApiController
         $prefix = $_POST['group_custom_name_prefix'];
         if (\OCA\Group_Custom\Lib\Helper::isPrefixValid($prefix)) {
             \OCA\Group_Custom\Lib\Helper::setGroupCustomNamePrefix($prefix);
-            \OCP\JSON::success(array("data" => array( "message" => $l->t("Saved") )));
+            return new JSONResponse([
+                "status" => "success",
+                "data" => [
+                    "message" => $l->t("Saved"),
+                ],
+            ]);
         }
         else {
-            \OCP\JSON::error(array("data" => array( "message" => $l->t("Invalid prefix") )));
+            return new JSONResponse([
+                "status" => "error",
+                "data" => [
+                    "message" => $l->t("Invalid prefix"),
+                ],
+            ]);
         }
     }
 

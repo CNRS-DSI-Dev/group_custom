@@ -10,7 +10,8 @@ if (\OCP\App::isEnabled('group_custom')) {
     \OCP\Util::addScript('group_custom','script');
     \OCP\Util::addStyle ('group_custom','style');
 
-    \OCP\App::registerAdmin('group_custom', 'settings-admin');
+    $app = new \OCA\Group_Custom\App\Group_Custom();
+    $app->registerSettings();
 
     $urlGenerator = \OC::$server->getURLGenerator();
     \OCP\App::addNavigationEntry(
