@@ -26,7 +26,7 @@
             }
 
             // patch ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            if ( \OCP\App::isEnabled('group_virtual') and \OC_Group::inGroup(OC_User::getUser(),'admin') ){
+            if ( OCP\App::isEnabled('group_virtual') and \OC::$server->getGroupManager()->inGroup(OC_User::getUser(),'admin') ){
                 if ( \OC_Group_Virtual::groupExists( $_['group'] ) ){
                     $members = \OC_Group_Virtual::usersInGroup( $_['group'] ) ;
                     foreach ($members as $member) {

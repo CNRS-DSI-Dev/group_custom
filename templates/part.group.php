@@ -12,7 +12,7 @@
         }
 
         // patch //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        if ( OCP\App::isEnabled('group_virtual') and OC_Group::inGroup(OC_User::getUser(),'admin') ){
+        if ( OCP\App::isEnabled('group_virtual') and \OC::$server->getGroupManager()->inGroup(OC_User::getUser(),'admin') ){
             foreach ( \OC_Group_Virtual::getGroups() as $group) {
                 echo "<li data-group=\"$group\" ><img src=" . OCP\Util::imagePath( 'group_custom', 'group.png' ) . ">$group</li>" ;
             }

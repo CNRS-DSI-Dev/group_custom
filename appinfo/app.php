@@ -5,7 +5,7 @@ use \OCA\Group_Custom\Lib\Group_Custom;
 if (\OCP\App::isEnabled('group_custom')) {
     \OCA\Group_Custom\Lib\Helper::registerHooks();
 
-    \OC_Group::useBackend( new Group_Custom() );
+    \OC::$server->getGroupManager()->addBackend( new Group_Custom() );
 
     \OCP\Util::addScript('group_custom','script');
     \OCP\Util::addStyle ('group_custom','style');

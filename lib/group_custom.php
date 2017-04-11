@@ -158,4 +158,17 @@ class Group_Custom implements \OCP\GroupInterface
         return $count;
     }
 
+    /**
+     * Returns whether the groups are visible for a given scope.
+     *
+     * @param string|null $scope scope string
+     * @return bool true if searchable, false otherwise
+     *
+     * @since 10.0.0
+     */
+    public function isVisibleForScope($scope) {
+        // not used...
+        return true;
+    }
+
 }

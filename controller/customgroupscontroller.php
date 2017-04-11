@@ -316,8 +316,15 @@ class CustomgroupsController extends Controller
             while ($count < 15 && count($users) == $limit) {
                 $limit = 15 - $count;
                 if ($shareWithinGroupOnly) {
-                    $usergroups = \OC_Group::getUserGroups(\OC_User::getUser());
-                    $users = \OC_Group::displayNamesInGroups($usergroups, $_GET['search'], $limit, $offset);
+                    $usergroups = \OC::$server->getGroupManager()->getUserIdGroups(\OC_User::getUser());
+                    $userGroupsIds = array_keys($usergroups);
+                    $users = [];
+                    foreach($userGroupsIds as $gid) {
+                        $diff = array_diff(\OC::$server->getGroupManager()->displayNamesInGroup($gid, $_GET['search'], $limit, $offset), $users);
+                        if ($diff) {
+                            $users = array_merge($diff, $users);
+                        }
+                    }
                 } else {
                     $users = \OC_User::getDisplayNames($_GET['search'], $limit, $offset);
                 }
